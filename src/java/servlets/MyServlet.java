@@ -5,6 +5,7 @@
  */
 package servlets;
 
+import entity.Book;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Melnikov
  */
-@WebServlet(name = "MyServlet", urlPatterns = {"/page1","/page2"})
+@WebServlet(name = "MyServlet", urlPatterns = {"/newBook","/addBook","/page2", "/page3"})
 public class MyServlet extends HttpServlet {
 
     /**
@@ -32,13 +33,40 @@ public class MyServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         String path = request.getServletPath();
-        if("/page1".equals(path)){
-            request.getRequestDispatcher("/WEB-INF/page1.jsp")
-                .forward(request, response);
-        }else if("/page2".equals(path)){
-            request.getRequestDispatcher("/WEB-INF/page2.jsp")
-                .forward(request, response);
+  
+        if(null != path)switch (path) {
+            case "/newBook":
+                request.getRequestDispatcher("/WEB-INF/newBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/addBook":
+                String title=request.getParameter("title");
+                String author=request.getParameter("author");
+                String year=request.getParameter("year");
+                String quantity=request.getParameter("quantity");
+                
+                Book book = new Book(title, author, Integer.parseInt(year),Integer.parseInt(quantity));
+                request.setAttribute("info", book);
+                request.getRequestDispatcher("/WEB-INF/newBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/page2":
+                request.getRequestDispatcher("/WEB-INF/page2.jsp")
+                        .forward(request, response);
+                break;
+            case "/page3":
+                String param = request.getParameter("param");
+                String param2 = request.getParameter("param2");
+               // String str = "This data send from servlet";
+                request.setAttribute("info",param);
+                request.setAttribute("param2",param2);
+                
+                request.getRequestDispatcher("/page3.jsp")
+                        .forward(request, response);
+                break;
+            
         }
         
     }
