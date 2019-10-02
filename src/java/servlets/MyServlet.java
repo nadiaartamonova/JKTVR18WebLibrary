@@ -9,11 +9,14 @@ import entity.Book;
 import entity.Reader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import session.BookFacade;
+import session.ReaderFacade;
 
 /**
  *
@@ -21,7 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "MyServlet", urlPatterns = {"/newBook","/addBook","/page2", "/page3", "/newReader", "/addReader"})
 public class MyServlet extends HttpServlet {
-
+    @EJB private BookFacade bookFacade;
+    @EJB private ReaderFacade readerFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -51,7 +55,7 @@ public class MyServlet extends HttpServlet {
                 {
                     Book book = new Book(title, author, Integer.parseInt(year),Integer.parseInt(quantity));
                     request.setAttribute("info", book);
-                    
+                    bookFacade.create(book);
                     
                 }catch(NumberFormatException e){
                     
@@ -74,7 +78,7 @@ public class MyServlet extends HttpServlet {
                 {
                     Reader reader = new Reader(name, lastname, Integer.parseInt(day),Integer.parseInt(month),Integer.parseInt(year));
                     request.setAttribute("info", reader);
-                  
+                    readerFacade.create(reader);
                 }  
                 catch(NumberFormatException e){
                     request.setAttribute("info", "не корректные данные");
