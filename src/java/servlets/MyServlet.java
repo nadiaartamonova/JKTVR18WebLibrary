@@ -6,6 +6,7 @@
 package servlets;
 
 import entity.Book;
+import entity.Reader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Melnikov
  */
-@WebServlet(name = "MyServlet", urlPatterns = {"/newBook","/addBook","/page2", "/page3"})
+@WebServlet(name = "MyServlet", urlPatterns = {"/newBook","/addBook","/page2", "/page3", "/newReader", "/addReader"})
 public class MyServlet extends HttpServlet {
 
     /**
@@ -46,10 +47,39 @@ public class MyServlet extends HttpServlet {
                 String author=request.getParameter("author");
                 String year=request.getParameter("year");
                 String quantity=request.getParameter("quantity");
-                
-                Book book = new Book(title, author, Integer.parseInt(year),Integer.parseInt(quantity));
-                request.setAttribute("info", book);
+                try 
+                {
+                    Book book = new Book(title, author, Integer.parseInt(year),Integer.parseInt(quantity));
+                    request.setAttribute("info", book);
+                    
+                    
+                }catch(NumberFormatException e){
+                    
+                    request.setAttribute("info", "не корректные данные");
+                }
                 request.getRequestDispatcher("/WEB-INF/newBook.jsp")
+                        .forward(request, response);
+                break;
+            case "/newReader":
+                request.getRequestDispatcher("/WEB-INF/newReader.jsp")
+                        .forward(request, response);
+                break;
+            case "/addReader":
+                String name=request.getParameter("name");
+                String lastname=request.getParameter("lastname");
+                String day=request.getParameter("day");
+                String month=request.getParameter("month");
+                year=request.getParameter("year");
+                try
+                {
+                    Reader reader = new Reader(name, lastname, Integer.parseInt(day),Integer.parseInt(month),Integer.parseInt(year));
+                    request.setAttribute("info", reader);
+                  
+                }  
+                catch(NumberFormatException e){
+                    request.setAttribute("info", "не корректные данные");
+                }
+                request.getRequestDispatcher("/WEB-INF/newReader.jsp")
                         .forward(request, response);
                 break;
             case "/page2":

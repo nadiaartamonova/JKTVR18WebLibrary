@@ -29,8 +29,8 @@ public class Reader implements Serializable{
     public Reader() {
     }
 
-    public Reader(Long id, String name, String lastname, int day, int month, int year) {
-        this.id = id;
+    public Reader( String name, String lastname, int day, int month, int year) {
+        //this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.day = day;
