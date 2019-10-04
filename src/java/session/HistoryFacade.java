@@ -6,6 +6,7 @@
 package session;
 
 import entity.History;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +29,16 @@ public class HistoryFacade extends AbstractFacade<History> {
     public HistoryFacade() {
         super(History.class);
     }
+
+    public List<History> findNotreturnBook() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public List<History> findNotReturnBook() {
+       
+        return em.createQuery("SELECT h FROM History h WHERE h.returnDate=null").getResultList();
+    }
+
+    
     
 }
