@@ -116,15 +116,23 @@ public class WebController extends HttpServlet {
                
                 try
                 {
-                    Reader reader = readerFacade.find(Long.parseLong(readerId));
                     Book book = bookFacade.find(Long.parseLong(bookId));
-                    History history=new History();
                     
-                    history.setBook(book);
-                    history.setReader(reader);
-                    history.setTakeOnDate(new Date());
-                    historyFacade.create(history);
-                    request.setAttribute("info", "Book is took");
+                    if(book.getQuantity()>0){
+                        Reader reader = readerFacade.find(Long.parseLong(readerId));
+                        book.setQuantity(book.getQuantity()-1);
+                        bookFacade.edit(book);
+                        
+                        History history=new History();
+                        history.setBook(book);
+                        history.setReader(reader);
+                        history.setTakeOnDate(new Date());
+                        historyFacade.create(history);
+                        request.setAttribute("info", "Book is took");
+                    }else{
+                        request.setAttribute("info", "No any book of this title");
+                    }
+                    
                 }  
                 catch(NumberFormatException e){
                     request.setAttribute("info", "не корректные данные");
@@ -147,6 +155,9 @@ public class WebController extends HttpServlet {
                 String historyId=request.getParameter("historyId");
                 History history = historyFacade.find(Long.parseLong(historyId));
                 history.setReturnDate(new Date());
+                Book book= history.getBook();
+                book.setQuantity(book.getQuantity()+1);
+                bookFacade.edit(book);
                 historyFacade.edit(history);
                 
                 

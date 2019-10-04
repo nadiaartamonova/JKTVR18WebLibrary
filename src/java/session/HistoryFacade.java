@@ -5,6 +5,7 @@
  */
 package session;
 
+import entity.Book;
 import entity.History;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -39,6 +40,8 @@ public class HistoryFacade extends AbstractFacade<History> {
         return em.createQuery("SELECT h FROM History h WHERE h.returnDate=null").getResultList();
     }
 
-    
+    public List<Book> findEnableBook(){
+        return em.createQuery("SELECT b FROM Book b where b.quantity>0").getResultList();
+    }
     
 }
