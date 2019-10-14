@@ -8,6 +8,7 @@ package servlets;
 import entity.Book;
 import entity.History;
 import entity.Reader;
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
+import session.UserFacade;
 
 /**
  *
@@ -44,6 +46,7 @@ public class WebController extends HttpServlet {
     @EJB private BookFacade bookFacade;
     @EJB private ReaderFacade readerFacade;
     @EJB private HistoryFacade historyFacade;
+    @EJB private UserFacade userFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -72,14 +75,17 @@ public class WebController extends HttpServlet {
                 try 
                 {
                     Book book = new Book(title, author, Integer.parseInt(year),Integer.parseInt(quantity));
-                    request.setAttribute("info", book);
+                    
+                    
                     bookFacade.create(book);
+                    request.setAttribute("info", book);
+                    request.setAttribute("info", "Book: " + book.getTitle() + " was added");
                     
                 }catch(NumberFormatException e){
                     
                     request.setAttribute("info", "не корректные данные");
                 }
-                request.getRequestDispatcher("/WEB-INF/newBook.jsp")
+                request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
                 break;
             case "/newReader":
@@ -92,18 +98,36 @@ public class WebController extends HttpServlet {
                 String day=request.getParameter("day");
                 String month=request.getParameter("month");
                 year=request.getParameter("year");
+                
+                String login=request.getParameter("login");
+                String password1=request.getParameter("password1");
+                String password2=request.getParameter("password2");
+                if (password1.equals(password2)){
+                    request.setAttribute("info", "некорректные данные");
+                    request.getRequestDispatcher("/index.jsp")
+                        .forward(request, response);
+                    break;
+                }
+                Reader reader = null;
                 try
                 {
-                    Reader reader = new Reader(name, lastname, Integer.parseInt(day),Integer.parseInt(month),Integer.parseInt(year));
-                    request.setAttribute("info", reader);
+                    reader = new Reader(name, lastname, Integer.parseInt(day),Integer.parseInt(month),Integer.parseInt(year));
+                    
                     readerFacade.create(reader);
+                    User user = new User(login, password1,reader);
+                    userFacade.create(user);
+                    request.setAttribute("info", reader);
+                    request.setAttribute("info", "Reader: " + reader.getName()+" "+ reader.getLastname() + " was added");
+                   
                 }  
                 catch(NumberFormatException e){
-                    request.setAttribute("info", "не корректные данные");
+                    readerFacade.remove(reader);
+                    request.setAttribute("info", "некорректные данные");
                 }
-                request.getRequestDispatcher("/WEB-INF/newReader.jsp")
+                request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
                 break;
+            
             case "/takeOn":
                 List<Book> listBooks = bookFacade.findEnableBooks();
                 List<Reader> listReaders = readerFacade.findAll();
@@ -112,6 +136,7 @@ public class WebController extends HttpServlet {
                 request.getRequestDispatcher("/WEB-INF/takeOn.jsp")
                         .forward(request, response);
                 break;
+            
             case "/createHistory":
                 String bookId=request.getParameter("bookId");
                 String readerId=request.getParameter("readerId");
@@ -121,12 +146,13 @@ public class WebController extends HttpServlet {
                     Book book = bookFacade.find(Long.parseLong(bookId));
                     
                     if(book.getQuantity()>0){
-                        Reader reader = readerFacade.find(Long.parseLong(readerId));
+                        reader = readerFacade.find(Long.parseLong(readerId));
                         book.setQuantity(book.getQuantity()-1);
                         bookFacade.edit(book);
                         
                         History history=new History();
                         history.setBook(book);
+                        
                         history.setReader(reader);
                         history.setTakeOnDate(new Date());
                         historyFacade.create(history);

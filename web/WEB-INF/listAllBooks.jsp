@@ -27,7 +27,7 @@
                 </c:forEach>
             </ul>
             
-            <a href="index.html"> back </a>
+            <a href="index.jsp"> back </a>
        
     </body>
 </html>

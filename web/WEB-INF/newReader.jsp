@@ -21,8 +21,13 @@
             Day: <input type="text" name="day" value="${reader.day}"><br>
             Month: <input type="text" name="month" value="${reader.month}"><br>
             Year: <input type="text" name="year" value="${reader.year}"><br>
-            <input type="submit" value="Reader was added"><br>
-            <a href="index.html">Back </a><br>
+            
+            <p>Registration: </p>
+            Login <input type="text" name="login" value="${reader.login}"><br>
+            Password: <input type="password" name="password1" value=""><br>
+            Confirmed password: <input type="password" name="password2" value="$"><br>
+            <input type="submit" value="New Reader"><br>
+            <a href="index.jsp">Back </a><br>
         </form>
     </body>
 </html>

@@ -43,7 +43,7 @@
             
             </select><br>
             <input type="submit" value="Book is taked"><br>
-            <a href="index.html">Back </a><br>
+            <a href="index.jsp">Back </a><br>
         </form>
         
         

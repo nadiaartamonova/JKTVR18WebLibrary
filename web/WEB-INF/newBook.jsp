@@ -21,7 +21,7 @@
             Year of publish: <input type="text" name="year" value="${book.year}"><br>
             Books quantity: <input type="text" name="quantity" value="${book.quantity}"><br>
             <input type="submit" value="Book was added"> <br>
-            <a href="index.html">Back </a><br>
+            <a href="index.jsp">Back </a><br>
         </form>
     </body>
 </html>
