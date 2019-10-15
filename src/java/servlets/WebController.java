@@ -23,6 +23,7 @@ import session.BookFacade;
 import session.HistoryFacade;
 import session.ReaderFacade;
 import session.UserFacade;
+import util.EncryptPass;
 
 /**
  *
@@ -102,7 +103,7 @@ public class WebController extends HttpServlet {
                 String login=request.getParameter("login");
                 String password1=request.getParameter("password1");
                 String password2=request.getParameter("password2");
-                if (password1.equals(password2)){
+                if (!password1.equals(password2)){
                     request.setAttribute("info", "некорректные данные");
                     request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
@@ -114,7 +115,11 @@ public class WebController extends HttpServlet {
                     reader = new Reader(name, lastname, Integer.parseInt(day),Integer.parseInt(month),Integer.parseInt(year));
                     
                     readerFacade.create(reader);
-                    User user = new User(login, password1,reader);
+                    EncryptPass ep=new EncryptPass();
+                    String salts = ep.createSalts();
+                    String encryptPassword = ep.setEncryptPass(password1, salts);
+                    
+                    User user = new User(login, encryptPassword,salts, reader);
                     userFacade.create(user);
                     request.setAttribute("info", reader);
                     request.setAttribute("info", "Reader: " + reader.getName()+" "+ reader.getLastname() + " was added");

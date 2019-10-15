@@ -9,15 +9,17 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>SingIn</title>
+        <title>Sing In</title>
     </head>
     <body>
-        <h1>SingIn</h1>
-        <form>
+        
+        <h1>Sing In</h1>
+        <p>${info}</p>
+        <form action="login" method="POST">
             login <input type="test" name="login"> <br>
             password <input type="password" name="password"> <br>
             
-            <input type="submit" name="Sing In">
+            <input type="submit" name="SingIn">
         </form>
     </body>
 </html>

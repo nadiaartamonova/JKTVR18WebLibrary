@@ -23,19 +23,30 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String Login;
+    @Column(nullable = false)
     private String Password;
+    private String salts;
     @OneToOne
     private Reader reader;
 
     public User() {
     }
 
-    public User(String Login, String Password, Reader reader) {
+    public User(String Login, String Password,String salts, Reader reader) {
         this.Login = Login;
         this.Password = Password;
         this.reader = reader;
+        this.salts = salts;
+    }
+
+    public String getSalts() {
+        return salts;
+    }
+
+    public void setSalts(String salts) {
+        this.salts = salts;
     }
 
     public Long getId() {
@@ -77,6 +88,7 @@ public class User implements Serializable {
                 + ", Login=" + Login 
                 + ", Password=" + Password 
                 + ", reader=" + reader.getLastname() 
+                + ", salts=" + salts
                 + '}';
     }
     
