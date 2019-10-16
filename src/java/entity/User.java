@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import static javax.swing.text.StyleConstants.Size;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -25,6 +27,7 @@ public class User implements Serializable {
     private Long id;
     @Column(unique = true, nullable = false)
     private String Login;
+    @Size(min =6)
     @Column(nullable = false)
     private String Password;
     private String salts;
