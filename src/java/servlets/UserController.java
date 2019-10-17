@@ -28,26 +28,23 @@ import util.EncryptPass;
 
 /**
  *
- * @author Melnikov
+ * @author pupil
  */
-@WebServlet(name = "WebController", urlPatterns = {
-        "/newBook"
-        ,"/addBook"
-        
-        ,"/returnOnBook"
-        ,"/returnBook"
-        ,"/changeActiveBooks"
+@WebServlet(name = "UserController", urlPatterns = {
+        "/takeOn"
+        , "/createHistory"
+        , "/buyBook"
         
 })
 
-public class WebController extends HttpServlet {
-    @EJB private BookFacade bookFacade;
-    @EJB private ReaderFacade readerFacade;
-    @EJB private HistoryFacade historyFacade;
+
+public class UserController extends HttpServlet {
     @EJB private UserFacade userFacade;
-   
+    @EJB private ReaderFacade readerFacade;
+    @EJB private BookFacade bookFacade;
+    @EJB private HistoryFacade historyFacade;
     
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
@@ -67,45 +64,11 @@ public class WebController extends HttpServlet {
                         .forward(request, response);
             return;
         }
-        if(!"nadia".equals(user.getLogin())){
-            request.setAttribute("info", "you have not permission");
-            request.getRequestDispatcher("/index.jsp")
-                        .forward(request, response);
-            return;
         
-        }
-        String path = request.getServletPath();
-        
-        if(null != path)switch (path) {
-            case "/newBook":
-                request.getRequestDispatcher("/WEB-INF/newBook.jsp")
-                        .forward(request, response);
-                break;
-            case "/addBook":
-                String title=request.getParameter("title");
-                String author=request.getParameter("author");
-                String year=request.getParameter("year");
-                String quantity=request.getParameter("quantity");
-                String price=request.getParameter("price");
-                try 
-                {
-                    Book book = new Book(null, title, author, Integer.parseInt(year),Integer.parseInt(quantity), Integer.parseInt(price));
-                    
-                    
-                    bookFacade.create(book);
-                    request.setAttribute("info", book);
-                    request.setAttribute("info", "Book: " + book.getTitle() + " was added");
-                    
-                }catch(NumberFormatException e){
-                    
-                    request.setAttribute("info", "не корректные данные");
-                }
-                request.getRequestDispatcher("/index.jsp")
-                        .forward(request, response);
-                break;
-           
+    String path = request.getServletPath();
             
-            case "/takeOn":
+    if(null != path)switch (path) {
+        case "/takeOn":
                 List<Book> listBooks = bookFacade.findEnableBooks();
                 List<Reader> listReaders = readerFacade.findAll();
                 request.setAttribute("listBooks", listBooks);
@@ -146,50 +109,15 @@ public class WebController extends HttpServlet {
                         .forward(request, response);
                 break;
                 
-            
-            case "/returnBook":
-                List<History> listHistories = historyFacade.findNotReturnBook();
+            case "/buyBook":
                 
-                request.setAttribute("listHistories", listHistories);
-               
-                request.getRequestDispatcher("/WEB-INF/returnBook.jsp")
-                        .forward(request, response);
-                break;
-            
-            case "/returnOnBook":
-                String historyId=request.getParameter("historyId");
-                History history = historyFacade.find(Long.parseLong(historyId));
-                history.setReturnDate(new Date());
-                Book book= history.getBook();
-                book.setQuantity(book.getQuantity()+1);
-                bookFacade.edit(book);
-                historyFacade.edit(history);
-                
-                
-                request.getRequestDispatcher("/returnBook")
-                        .forward(request, response);
                 
                 break;
                 
-            
                 
-            case "/changeActiveBooks":
-                bookId=request.getParameter("bookId");
-                String active=request.getParameter("active");
-                book = bookFacade.find(Long.parseLong(bookId));
-                
-                if("true".equals(active)){
-                    book.setActive(false);
-                }
-                else{
-                    book.setActive(true);
-                }
-                bookFacade.edit(book);
-                request.getRequestDispatcher("/showListAllBooks").forward(request, response);
-                    
-                
-                break;
-        }
+    }
+    
+       
         
     }
 

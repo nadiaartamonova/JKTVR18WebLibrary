@@ -20,6 +20,7 @@
             Author of book: <input type="text" name="author" value="${book.author}"><br>
             Year of publish: <input type="text" name="year" value="${book.year}"><br>
             Books quantity: <input type="text" name="quantity" value="${book.quantity}"><br>
+            Price: <input type="text" name="quantity" value="${book.price}"><br>
             <input type="submit" value="Book was added"> <br>
             <a href="index.jsp">Back </a><br>
         </form>

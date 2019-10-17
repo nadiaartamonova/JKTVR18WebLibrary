@@ -25,12 +25,25 @@
                 <a href="logout"> Logout</a><br>
             </c:if>
                   
-            <h2>Actions : </h2>
-            <a href="newBook">1. New book</a><br>
-            <a href="newReader">2. New reader</a><br>
-            <a href="takeOn">3. Took book</a><br>
-            <a href="returnBook">4. Book return</a><br>
-            <a href="showListAllBooks">5. Show list all books</a><br>
+            <h2>Actions: </h2>
+            <h4>For guest: </h4>
+            
+            <a href="showListAllBooks">Show list all books</a><br>
+            <a href="newReader">Register new reader</a><br>
+            
+            <c:if test="${null!=user}">
+                <h4> For registered users: </h4>
+                <a href="takeOn">Buy book</a><br>
+
+            </c:if>
+            
+            
+            <c:if test="${null!=user  && 'nadia' eq user.login}">
+                <h4> For manager: </h4>
+                <a href="newBook">1. New book</a><br>
+                <a href="takeOn">2. Took book</a><br>
+                <a href="returnBook">3. Book return</a><br>
+            </c:if>
         </div>
     </body>
 </html>
